@@ -1,5 +1,7 @@
 package day13
 
+import java.math.BigInteger
+
 import scala.io.Source
 
 object Day13 {
@@ -17,7 +19,7 @@ object Day13 {
 
     //println(part1(time, schedule))
 
-    println(part2(input(1).split(",").map(s => if (s == "x") 0 else s.toInt)))
+    println(part2CRT(input(1).split(",").map(s => if (s == "x") 0 else s.toInt)))
   }
 
   def part1(time:Int, schedule:List[Int]):Int = {
@@ -48,5 +50,24 @@ object Day13 {
     }
 
     time
+  }
+
+  def part2CRT(schedule:Array[Int]):BigInt = {
+    val scheduleWithIndex = schedule.zipWithIndex
+    val diffs = scheduleWithIndex.map(p =>
+      (p._1, if (p._1 > 0) {
+        Math.abs(p._1 - (p._2 % p._1))
+      } else 0))
+
+    val diffsNoZero = diffs.filter(_._1 > 0)
+
+    println(diffsNoZero.toList)
+
+    val nums:Array[BigInteger] = diffsNoZero.map (p => new BigInteger("" + p._1))
+    val rems:Array[BigInteger] = diffsNoZero.map (p => new BigInteger("" + p._2))
+
+    println(GFG.findMinX(nums, rems, nums.length))
+
+    BigInt(0)
   }
 }
