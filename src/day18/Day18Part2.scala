@@ -1,12 +1,12 @@
-package Day18
+package day18
 
 import scala.collection.mutable
 import scala.io.Source
 
-object Day18Part1 {
+object Day18Part2 {
 
   def main(args: Array[String]): Unit = {
-    println("Day 18 Part 1")
+    println("Day 18 Part 2")
 
     val input = Source.fromFile("src/day18/input.txt").getLines.toList
 
@@ -51,8 +51,19 @@ object Day18Part1 {
     val output = mutable.ListBuffer[String]()
 
     tokens.foreach {
+      case it@"*" =>
+        if (operators.nonEmpty) {
+          var curOp = operators.pop()
+          while (curOp != null && curOp == "+") {
+            output.append(curOp)
+            curOp = if (operators.nonEmpty) operators.pop() else null
+          }
+          if (curOp != null) {
+            operators.push(curOp)
+          }
+        }
+        operators.push(it)
       case it@"+" => operators.push(it)
-      case it@"*" => operators.push(it)
       case it@")" => operators.push(it)
       case "(" =>
         var curOp = operators.pop()
